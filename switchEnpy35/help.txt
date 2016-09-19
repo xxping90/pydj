@@ -1,0 +1,8 @@
+当前运行脚本环境为3.5.1
+
+运行前需要在switch.py,production_switch,test_switch.py的parentdir变量修改为本机乐投软件安装路径
+
+需要安装对应python版本直接点击即可运行
+switch.py可自主选择要切换环境
+production_switch 直接切换正产环境
+test_switch.py  直接切换测试环境

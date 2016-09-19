@@ -1,0 +1,77 @@
+<html lang='zh-CN'>
+	<head>
+		{# load the tag library #}
+		{% load bootstrap3 %}
+		{# load CSS and JavaScrip #}
+		{% bootstrap_css %}
+		{% bootstrap_javascript %}
+		{% bootstrap_messages %}
+	</head>
+	<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class='navbar-brand' href="#">Project name</a>
+				</div>
+			</div>
+		</nav>
+
+		<br><br>
+		<div class='well'>
+			<h2>student information</h2>
+			{% if student_list %}
+				<table class = 'table'>
+					<th>name</th><th>age</th><th>sex</th><th>occupation</th>
+					{% for k,v in student_list.items %}
+						<tr><td>{{ k }}</td>
+							{% for i in v %}
+								<td>{{ i }}</td>
+							{% endfor %}
+					{% endfor %}
+				</table>
+			{% endif %}
+			<h2>book list</h2>
+					<table class='table'>
+						<th>name</th><th>publisher</th><th>data</th><th>authors</th>
+						{% for book in book_list %}
+							<tr class="success">
+							<td>{{ book.title }}</td>
+							<td>{{ book.publisher.name }}</td>
+							<td>{{ book.publication_date }}</td>
+							<td>
+								{% for author in book.author.values %}
+									{{author.first_name}}
+								{% endfor %}
+							</td>
+						{% endfor %}
+					</table>
+		</div>
+
+<!-- 		<div class='container'>
+			<div class='row'>
+				<h2>book list</h2>
+					<table class='table'>
+						<th>name</th><th>publisher</th><th>data</th><th>authors</th>
+						{% for book in book_list %}
+							<tr class="success">
+							<td>{{ book.title }}</td>
+							<td>{{ book.publisher.name }}</td>
+							<td>{{ book.publication_date }}</td>
+							<td>
+								{% for author in book.authers.values %}
+									{{auther.first_name}}
+								{% endfor%}
+							</td>
+						{% endfor %}
+					</table>
+				
+			</div>
+		</div> -->
+
+		<footer>>
+		<p>&copy; Company 2016 & chongshi </p>
+		</footer>
+	</body>
+	
+
+</html>

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+	<h2>嘿！{{user}}</h2>
+	{% for blog in blog_list %}
+		<h3>{{ blog.title }}</h3>
+		<p>{{ blog.timetamp}}</p>
+		<p>{{ blog.body}}</p>
+	{% endfor %}
+	<h2>嘿！{{user}}
+<!-- 		<a href='/logout/'>退出</a> -->
+		<a href="{%url 'blog:login'%}">退出</a>
+	</h2>
+{% endblock %}
