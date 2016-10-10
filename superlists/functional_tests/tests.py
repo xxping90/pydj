@@ -1,9 +1,26 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import unittest
+import sys
 
-class NewVistorTest(LiveServerTestCase):
+class NewVistorTest(StaticLiveServerTestCase):
+	@classmethod
+	def setUpClass(cls):
+		for arg in sys.argv:
+			if arg in sys.argv:
+				if 'liveserver' in arg:
+					cls.server_url = 'http://' + arg.split('=')[1]
+					return
+			super().setUpClass()
+			cls.server_url = cls.live_server_url
+
+	@classmethod
+	def tearDownClass(cls):
+		if cls.server_url == cls.live_server_url:
+			super().tearDownClass()
+
 	def setUp(self):
 		self.browser = webdriver.Chrome()
 		self.browser.implicitly_wait(3)
@@ -15,7 +32,7 @@ class NewVistorTest(LiveServerTestCase):
 		self.assertIn(row_text,[row.text for row in rows])
 
 	def test_can_start_a_list_and_rerieve_it_later(self):
-		self.browser.get(self.live_server_url)
+		self.browser.get(self.server_url)
 
 		self.assertIn('To-Do',self.browser.title)
 		header_text = self.browser.find_element_by_tag_name('h1').text
@@ -49,10 +66,10 @@ class NewVistorTest(LiveServerTestCase):
 		##使用新浏览器会话
 		##确保伊迪丝的信息不回从cookie泄露出来
 		self.browser.quit()
-		self.browser = webdriver.Firefox()
+		self.browser = webdriver.Chrome()
 
 		# 弗朗西斯访问首页，页面中将看不到伊迪丝的清单
-		self.browser.get(self.live_server_url)
+		self.browser.get(self.server_url)
 		page_text = self.browser.find_element_by_tag_name('body').text
 		self.assertNotIn('Buy peacock feathers',page_text)
 		self.assertNotIn('make a fly',page_text)
@@ -71,6 +88,29 @@ class NewVistorTest(LiveServerTestCase):
 		page_text = self.browser.find_element_by_tag_name('body').text
 		self.assertNotIn('Buy peacock feathers',page_text)
 		self.assertIn('Buy milk',page_text)
+
+	def test_layout_and_styling(self):
+		#伊迪丝访问首页
+		self.browser.get(self.server_url)
+		self.browser.set_window_size(1024,768)
+		#她看到输入框完美居中显示
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		
+		self.assertAlmostEqual(
+			inputbox.location['x'] + inputbox.size['width']/2,
+			512,
+			delta=10
+			)
+
+		#她新建了一个清单，看到输入框仍然完美的居中显示
+		inputbox.send_keys('testing\n')
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		self.assertAlmostEqual(
+			inputbox.location['x'] + inputbox.size['width']/2,
+			512,
+			delta=10
+		)
+
 
 
 # if __name__=='__main__':
